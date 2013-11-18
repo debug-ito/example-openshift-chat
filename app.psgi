@@ -5,7 +5,10 @@ use Log::Dispatch::FileWriteRotate;
 
 my $app = sub {
     my $env = shift;
-    my $body = "It works!";
+    my $body = "It works!\n\n";
+    foreach my $key (qw(multithread multiprocess run_once nonblocking streaming)) {
+        $body .= "psgi.$key : " . ($env->{"psgi.$key"} ? "TRUE" : "FALSE") . "\n";
+    }
     return [200,
             ["Content-Type" => "text/plain",
              "Content-Length" => length($body)],
