@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 use Plack::Builder;
-use Log::Dispatch::FileRotate;
+use Log::Dispatch::FileWriteRotate;
 
 my $app = sub {
     my $env = shift;
@@ -12,13 +12,12 @@ my $app = sub {
             [$body]];
 };
 
-my $logger = Log::Dispatch::FileRotate->new(
-    name => "access",
+my $logger = Log::Dispatch::FileWriteRotate->new(
     min_level => "info",
-    filename => "$ENV{OPENSHIFT_PLACK_LOG_DIR}/access.log",
-    mode => "append",
-    size => 50,
-    max  => 5
+    dir => $ENV{OPENSHIFT_PLACK_LOG_DIR},
+    prefix => "access.log",
+    size => 50*1024*1024,
+    histories => 5
 );
 
 builder {
