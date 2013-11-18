@@ -2,9 +2,9 @@
 ## actions such as starting and stopping your app.
 
 
-$ENV{PLACK_ENV} = "development";
+$ENV{PLACK_ENV} = "deployment";
 
 ## If you prefer Starman, for example, uncomment the following line
 ## and put "require 'Starman';" into cpanfile.
 
-## $ENV{PLACK_SERVER} = "Starman";
+$ENV{PLACK_SERVER} = "Twiggy";
