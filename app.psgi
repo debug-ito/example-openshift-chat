@@ -3,17 +3,42 @@ use warnings;
 use Plack::Builder;
 use Log::Dispatch::FileWriteRotate;
 use Data::Section::Simple qw(get_data_section);
-
+use Text::Xslate;
+use Plack::App::WebSocket;
 use MyLib::CurrentTime qw(current_time_str);
 
-my $page_html = get_data_section("index.html");
+my %websockets = ();
+my $websocket_endpoint = Plack::App::WebSocket->new(
+    on_establish => sub {
+        my ($conn) = @_;
+        $websockets{"$conn"} = $conn;
+        $conn->on(message => sub {
+            my ($conn, $message) = @_;
+            $_->send($message) foreach values %websockets;
+        });
+        $conn->on(finish => sub {
+            my ($conn) = @_;
+            delete $websockets{"$conn"};
+        });
+    }
+);
+
+my $template = Text::Xslate->new(
+    path => [{index => get_data_section("index.html")}],
+    cache_dir => "$ENV{OPENSHIFT_TMP_DIR}/xslate",
+);
+my $page_html = $template->render("index", { app_fqdn => $ENV{OPENSHIFT_APP_DNS} });
 
 my $app = sub {
     my $env = shift;
-    return [200,
-            ["Content-Type" => "text/html; charset=UTF-8",
-             "Content-Length" => length($page_html)],
-            [$page_html]];
+    if($env->{PATH_INFO} eq "/websocket") {
+        return $websocket_endpoint->call($env);
+    }else {
+        return [200,
+                ["Content-Type" => "text/html; charset=UTF-8",
+                 "Content-Length" => length($page_html)],
+                [$page_html]];
+    }
 };
 
 my $logger = Log::Dispatch::FileWriteRotate->new(
@@ -61,4 +86,7 @@ __DATA__
       <li>Comment: <input id="user-comment" type="text" value="" /></li>
     </ul>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script>
+var websocket_url = "http://<: $app_fqdn :>:8080/websocket";
+    </script>
 </html>
