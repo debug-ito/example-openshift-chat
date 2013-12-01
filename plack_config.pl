@@ -4,9 +4,9 @@
 ## See https://metacpan.org/pod/plackup for detail.
 
 
-$ENV{PLACK_ENV} = "development";
+$ENV{PLACK_ENV} = "deployment";
 
 ## If you prefer Starman, for example, uncomment the following line
-## and put "requires 'Starman';" into cpanfile.
+## and put "require 'Starman';" into cpanfile.
 
-## $ENV{PLACK_SERVER} = "Starman";
+$ENV{PLACK_SERVER} = "Twiggy";
