@@ -97,6 +97,7 @@ $(function() {
 
     var doSend = function() {
         var text = $("#user-name").val() + ": " + $("#user-comment").val();
+        $("#user-comment").val("");
         ws.send(text);
     };
     var showInBox = function(text) {
@@ -109,6 +110,7 @@ $(function() {
                 doSend();
                 return false;
             }
+            return true;
         });
     };
     var removeHandlers = function() {
@@ -117,7 +119,7 @@ $(function() {
     };
     
     ws.onopen = function() {
-        showInBox("WebSocket opened.");
+        showInBox("---- WebSocket opened.");
         setHandlers();
     };
     ws.onmessage = function(event) {
@@ -125,7 +127,7 @@ $(function() {
     };
     ws.onclose = function() {
         removeHandlers();
-        showInBox("WebSocket closed unexpectedly.");
+        showInBox("---- WebSocket closed unexpectedly.");
     }
 });
     </script>
