@@ -47,7 +47,7 @@ my $page_html = $template->render("index", { app_fqdn => $ENV{OPENSHIFT_APP_DNS}
 my $app = sub {
     my $env = shift;
     if($env->{PATH_INFO} eq "/websocket") {
-        if($env->{HTTP_ORIGIN} && $env->{HTTP_ORIGIN} =~ m{^http://\Q$ENV{OPENSHIFT_APP_DNS}\E/}) {
+        if($env->{HTTP_ORIGIN} && $env->{HTTP_ORIGIN} =~ m{^http://\Q$ENV{OPENSHIFT_APP_DNS}\E}) {
             return $websocket_endpoint->call($env);
         }else {
             my $body = "Forbidden";
