@@ -15,12 +15,22 @@ my $websocket_endpoint = Plack::App::WebSocket->new(
         $websockets{"$conn"} = $conn;
         $conn->on(message => sub {
             my ($conn, $message) = @_;
-            $_->send($message) foreach values %websockets;
+            my $cur_time = current_time_str();
+            $message = "[$cur_time] $message";
+            foreach my $conn (values %websockets) {
+                $conn->send($message);
+            }
         });
         $conn->on(finish => sub {
             my ($conn) = @_;
             delete $websockets{"$conn"};
+            my $socket_num = keys %websockets;
+            foreach my $conn (values %websockets) {
+                $conn->send("---- There are $socket_num people in this chat now.")
+            }
         });
+        my $socket_num = keys %websockets;
+        $conn->send("---- There are $socket_num people in this chat now.");
     }
 );
 
