@@ -1,3 +1,4 @@
+use 5.10.0;
 use strict;
 use warnings;
 use Plack::Builder;
@@ -85,10 +86,47 @@ __DATA__
     <pre id="chat-box"></pre>
     <ul>
       <li>Name: <input id="user-name" type="text" value="" /></li>
-      <li>Comment: <input id="user-comment" type="text" value="" /></li>
+      <li>Comment: <input id="user-comment" type="text" value="" />
+                   <input id="user-send" type="button" value="Send" disabled="true" /></li>
     </ul>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
     <script>
 var websocket_url = "http://<: $app_fqdn :>:8000/websocket";
+$(function() {
+    var ws = new WebSocket(websocket_url);
+
+    var doSend = function() {
+        var text = $("#user-name").val() + ": " + $("#user-comment").val();
+        ws.send(text);
+    };
+    var showInBox = function(text) {
+        $("#chat-box").append($("<span></span>").text(text + "\n"));
+    };
+    var setHandlers = function() {
+        $("#user-send").removeAttr("disabled").on("click", doSend);
+        $("#user-comment").on("keydown", function(event) {
+            if(event.which === 13) {
+                doSend();
+                return false;
+            }
+        });
+    };
+    var removeHandlers = function() {
+        $("#user-send").attr("disabled", "true").off("click");
+        $("#user-comment").off("keydown");
+    };
+    
+    ws.onopen = function() {
+        showInBox("WebSocket opened.");
+        setHandlers();
+    };
+    ws.onmessage = function(event) {
+        showInBox(event.data);
+    };
+    ws.onclose = function() {
+        removeHandlers();
+        showInBox("WebSocket closed unexpectedly.");
+    }
+});
     </script>
 </html>
