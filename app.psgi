@@ -9,6 +9,14 @@ use Plack::App::WebSocket;
 use MyLib::CurrentTime qw(current_time_str);
 
 my %websockets = ();
+
+sub report_number_of_peole {
+    my $socket_num = keys %websockets;
+    foreach my $conn (values %websockets) {
+        $conn->send("---- There are $socket_num people in this chat now.")
+    }
+}
+
 my $websocket_endpoint = Plack::App::WebSocket->new(
     on_establish => sub {
         my ($conn) = @_;
@@ -24,13 +32,9 @@ my $websocket_endpoint = Plack::App::WebSocket->new(
         $conn->on(finish => sub {
             my ($conn) = @_;
             delete $websockets{"$conn"};
-            my $socket_num = keys %websockets;
-            foreach my $conn (values %websockets) {
-                $conn->send("---- There are $socket_num people in this chat now.")
-            }
+            report_number_of_peole();
         });
-        my $socket_num = keys %websockets;
-        $conn->send("---- There are $socket_num people in this chat now.");
+        report_number_of_peole();
     }
 );
 
