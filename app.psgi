@@ -43,10 +43,17 @@ my $template = Text::Xslate->new(
 );
 my $page_html = $template->render("index", { app_fqdn => $ENV{OPENSHIFT_APP_DNS} });
 
+my $logger;
 
 my $app = sub {
     my $env = shift;
     if($env->{PATH_INFO} eq "/websocket") {
+
+        foreach my $env_key (keys %$env) {
+            my $val = $env->{$env_key};
+            $logger->log(level => "info", message => "$env_key : '$val'");
+        }
+        
         if($env->{HTTP_ORIGIN} && $env->{HTTP_ORIGIN} =~ m{^http://\Q$ENV{OPENSHIFT_APP_DNS}\E}) {
             return $websocket_endpoint->call($env);
         }else {
@@ -65,7 +72,7 @@ my $app = sub {
 };
 
 
-my $logger = Log::Dispatch::FileWriteRotate->new(
+$logger = Log::Dispatch::FileWriteRotate->new(
     min_level => "info",
     dir => $ENV{OPENSHIFT_PLACK_LOG_DIR},
     prefix => "access.log",
