@@ -29,6 +29,7 @@ my $template = Text::Xslate->new(
 );
 my $page_html = $template->render("index", { app_fqdn => $ENV{OPENSHIFT_APP_DNS} });
 
+
 my $app = sub {
     my $env = shift;
     if($env->{PATH_INFO} eq "/websocket") {
@@ -40,6 +41,7 @@ my $app = sub {
                 [$page_html]];
     }
 };
+
 
 my $logger = Log::Dispatch::FileWriteRotate->new(
     min_level => "info",
@@ -85,8 +87,8 @@ __DATA__
       <li>Name: <input id="user-name" type="text" value="" /></li>
       <li>Comment: <input id="user-comment" type="text" value="" /></li>
     </ul>
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
     <script>
-var websocket_url = "http://<: $app_fqdn :>:8080/websocket";
+var websocket_url = "http://<: $app_fqdn :>:8000/websocket";
     </script>
 </html>
