@@ -91,7 +91,7 @@ __DATA__
     </ul>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
     <script>
-var websocket_url = "http://<: $app_fqdn :>:8000/websocket";
+var websocket_url = "ws://<: $app_fqdn :>:8000/websocket";
 $(function() {
     var ws = new WebSocket(websocket_url);
 
