@@ -1,4 +1,3 @@
-use 5.10.0;
 use strict;
 use warnings;
 use Plack::Builder;
@@ -48,7 +47,15 @@ my $page_html = $template->render("index", { app_fqdn => $ENV{OPENSHIFT_APP_DNS}
 my $app = sub {
     my $env = shift;
     if($env->{PATH_INFO} eq "/websocket") {
-        return $websocket_endpoint->call($env);
+        if($env->{HTTP_ORIGIN} && $env->{HTTP_ORIGIN} =~ m{^http://\Q$ENV{OPENSHIFT_APP_DNS}\E/}) {
+            return $websocket_endpoint->call($env);
+        }else {
+            my $body = "Forbidden";
+            return [403,
+                    ["Content-Type" => "text/plain",
+                     "Content-Length" => length($body)],
+                    [$body]];
+        }
     }else {
         return [200,
                 ["Content-Type" => "text/html; charset=UTF-8",
