@@ -1,58 +1,24 @@
-# OpenShift Cartridge for Plack/PSGI Perl application
+# Sample Application of OpenShift Plack/PSGI cartridge
 
-The `plack` cartridge helps you create Perl Web applications based on
-a pure Plack/PSGI infractructure. It uses `plackup` command to start
-the PSGI server of your choice and runs your application on it.
+This is a sample application using
+[OpenShift Plack/PSGI cartridge](https://github.com/debug-ito/openshift-cartridge-plack).
 
+## About This App
 
-## Structure
+- A simple chat application with only one chat room.
+- Use [Twiggy](https://metacpan.org/pod/Twiggy) for the PSGI server.
+- No Web application framework.
+- Chat messages are delivered through WebSockets, using [Plack::App::WebSocket](https://metacpan.org/pod/Plack::App::WebSocket).
 
-- app.psgi :
-  Your PSGI application.
-  See https://metacpan.org/pod/PSGI for how to write PSGI apps.
-  
-- cpanfile :
-  List of CPAN modules that your application depends on.
-  See https://metacpan.org/pod/cpanfile for how to write cpanfile.
-  
-- plack_config.pl :
-  Script to set environment variables to control how "plackup" should work.
-  
-- lib/ :
-  Your Perl module library. lib/ is automatically prepended to
-  PERL5LIB environment variable.
-  
-- t/ :
-  Directory your test scripts reside. *.t files are executed by
-  "prove" command.
-  
-- .proverc :
-  Options for "prove" command.
+## How to Deploy
+
+- Create an app using the Plack cartridge.
+  See https://github.com/debug-ito/openshift-cartridge-plack
+- Replace the content of the app directory with this sample.
+- `git commit` the changes.
+- `git push`
 
 
-## Environment Variables
+## Author
 
-OpenShift provides a lot of useful information as environment variables.
-See http://openshift.github.io/documentation/oo_user_guide.html#environment-variables
-for the full list of them.
-
-Below is the environment variable that `plack` cartridge provides.
-
-- OPENSHIFT_PLACK_LOG_DIR :
-  Directory path in which you should store your log files. It is up to
-  you to write and rotate logs in this directory. The log files are
-  cleaned up by "rhc app tidy YOUR_APP_NAME" command.
-
-
-## Module Management
-
-CPAN modules you depend are automatically installed by `cpanm`
-tool. You should look into the following directories if something goes
-wrong.
-
-- Directory ${OPENSHIFT_PLACK_DIR}/.cpanm :
-  Internal metadata and log files of `cpanm` are stored.
-
-- Directory ${OPENSHIFT_PLACK_DIR}/local :
-  External CPAN modules are installed.
-
+Toshio Ito - https://metacpan.org/author/TOSHIOITO
