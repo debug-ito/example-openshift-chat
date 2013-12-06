@@ -1,6 +1,6 @@
-# Sample Application of OpenShift Plack/PSGI cartridge
+# Example Application of OpenShift Plack/PSGI cartridge
 
-This is a sample application using
+This is an example application using
 [OpenShift Plack/PSGI cartridge](https://github.com/debug-ito/openshift-cartridge-plack).
 
 ## About This App
@@ -14,7 +14,7 @@ This is a sample application using
 
 - Create an app using the Plack cartridge.
   See https://github.com/debug-ito/openshift-cartridge-plack
-- Replace the content of the app directory with this sample.
+- Replace the content of the app directory with this example.
 - `git commit` the changes.
 - `git push`
 
