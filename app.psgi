@@ -5,7 +5,7 @@ use Log::Dispatch::FileWriteRotate;
 use Data::Section::Simple qw(get_data_section);
 use Text::Xslate;
 use Plack::App::WebSocket;
-use MyLib::CurrentTime qw(current_time_str);
+use MyLib::CurrentTime qw(current_time_str);  ## located under lib/ directory
 
 my %websockets = ();
 
