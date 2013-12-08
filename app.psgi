@@ -61,7 +61,7 @@ my $logger = Log::Dispatch::FileWriteRotate->new(
     min_level => "info",
     dir => $ENV{OPENSHIFT_PLACK_LOG_DIR},
     prefix => "access.log",
-    size => 50*1024*1024,
+    size => 10*1024*1024,
     histories => 5
 );
 
