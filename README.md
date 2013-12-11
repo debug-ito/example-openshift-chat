@@ -3,6 +3,8 @@
 This is an example application using
 [OpenShift Plack/PSGI cartridge](https://github.com/debug-ito/openshift-cartridge-plack).
 
+I wrote a Japanese tutorial to use this example. http://qiita.com/debug-ito/items/e347dd1e08891f8dd612
+
 ## About This App
 
 - A simple chat application with only one chat room.
